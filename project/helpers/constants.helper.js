@@ -4,7 +4,7 @@ module.exports = function(builder) {
     function constantsHelper() {
         //definition
         var helper = this;
-        helper.port = process.env.APP_PORT ? process.env.APP_PORT : 3000;
+        helper.port = process.env.PORT ? process.env.PORT : 3000;
         helper.apiSecret = "SegredoDaMinhaApi";
         
         helper.appDb = {
