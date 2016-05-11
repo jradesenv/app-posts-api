@@ -1,0 +1,48 @@
+module.exports = function(builder) {
+    builder.addModule(usuarioResource);
+
+    function usuarioResource(router, responseHelper, usuarioService, authMiddleware) {
+        //definition
+        router.post('/login', efetuarLogin);
+        router.post('/usuario', criar); //sem autenticação pra facilitar
+        router.get('/usuario', authMiddleware, listar);
+        router.get('/usuario/:id', authMiddleware, buscar);
+
+        //implementation
+        function listar(req, res) {
+            usuarioService.listar(function(err, usuarios) {
+                responseHelper.isSuccessful(err, res, function() {
+                    res.send({usuarios: usuarios});
+                });
+            });
+        }
+        
+        function buscar(req, res) {
+            usuarioService.buscar(req.params.id, function(err, usuario) {
+                responseHelper.isSuccessful(err, res, function() {
+                    res.send({usuario: usuario});
+                });
+            });
+        }
+        
+        function criar(req, res) {
+            usuarioService.criar(req.body, function(err, id) {
+                responseHelper.isSuccessful(err, res, function() {
+                    res.send({id: id});
+                });
+            });
+        }
+
+        function efetuarLogin(req, res) {
+            usuarioService.efetuarLogin(req.body, function(err, usuario, token) {
+                responseHelper.isSuccessful(err, res, function() {
+                    var resposta = {
+                        usuario: usuario,
+                        token: token
+                    };
+                    res.send(resposta);
+                })
+            });
+        }
+    }
+};
