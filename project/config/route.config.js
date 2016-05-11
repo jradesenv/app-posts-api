@@ -24,8 +24,6 @@ module.exports = function (builder) {
 
             //registrar rotas da api
             app.use('/api', router);
-            //expoe imagens
-            app.use("/images", express.static(__imagesPath));
             //expoe website
             // app.use("/eventos", express.static(__clientPath));
         }

@@ -27,13 +27,6 @@ module.exports = function (builder) {
             var port = server.address().port;
             global.__rootPath = path.resolve(__dirname.split('config')[0]);
             //global.__clientPath = path.join(global.__rootPath, "client/src");
-            global.__webUrl = constantsHelper.webUrl;
-            global.__imagesPath = constantsHelper.pastaImagens;
-
-            if (!fs.existsSync(global.__imagesPath)) {
-                console.log("creating folder: " + global.__imagesPath);
-                fs.mkdirSync(global.__imagesPath);
-            }
 
             callback();
         }
