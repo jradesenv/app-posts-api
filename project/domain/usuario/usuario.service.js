@@ -66,12 +66,12 @@ module.exports = function(builder) {
                 if (usuario) {
                     senha = alreadyMd5 ? senha : md5(senha);
                     if (senha !== usuario.senha) {
-                        callback("Usuário e/ou senha inválidos.");
+                        callback({status: 401, message: "Usuário e/ou senha inválidos."});
                     } else {
                         callback(null, usuario);
                     }
                 } else {
-                    callback("Usuário e/ou senha inválidos.");
+                    callback({status: 401, message: "Usuário e/ou senha inválidos."});
                 }
             }, true);
         }

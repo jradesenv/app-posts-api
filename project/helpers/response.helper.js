@@ -20,8 +20,8 @@ module.exports = function (builder) {
         
         function sendGenericError(err, res) {
             var errorMsg = _getErrorMsg(err);
-            
-            res.status(500).send({
+            var errorStatus = _getErrorStatus(err);
+            res.status(errorStatus || 500).send({
                 error: errorMsg
             });
         }
@@ -38,6 +38,16 @@ module.exports = function (builder) {
                 }
             }
             return errorMsg;
+        }
+        
+        function _getErrorStatus(err) {
+            var errorStatus = 500
+            if(typeof (err) !== "string"){
+                if(err.status) {
+                    errorStatus = err.status;
+                }
+            }
+            return errorStatus;
         }
 
         function isSuccessful(err, res, callback) {
