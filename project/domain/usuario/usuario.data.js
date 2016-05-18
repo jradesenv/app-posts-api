@@ -9,6 +9,7 @@ module.exports = function(builder) {
         model.getByLogin = getByLogin;
         model.create = create;
         model.update = update;
+        model.remove = remove;
         return model;
 
         // implementation
@@ -25,6 +26,19 @@ module.exports = function(builder) {
                 })
         }
         
+        function remove(id, callback) {
+            var query = knex("usuario")
+                .where({id: id})
+                .del();
+                
+            query.then(function () {
+                callback(null);
+            })
+            .catch(function (err) {
+                callback(err);
+            });
+        }
+        
         function create(usuario, callback) {
             var usuarioModel = new UsuarioModel(usuario);
             delete usuarioModel.id;
@@ -38,7 +52,7 @@ module.exports = function(builder) {
             })
             .catch(function (err) {
                 callback(err);
-            }); 
+            });
         }
         
         function update(usuario, callback) {

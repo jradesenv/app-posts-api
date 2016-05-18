@@ -6,6 +6,7 @@ module.exports = function(builder) {
         router.post('/login', efetuarLogin);
         router.post('/usuario', criar); //sem autenticação pra facilitar
         router.put('/usuario/:id', authMiddleware, alterar); //sem autenticação pra facilitar
+        router.delete('/usuario/:id', authMiddleware, excluir); //sem autenticação pra facilitar
         router.get('/usuario', authMiddleware, listar);
         router.get('/usuario/:id', authMiddleware, buscar);
 
@@ -30,6 +31,14 @@ module.exports = function(builder) {
             usuarioService.criar(req.body, function(err, id) {
                 responseHelper.isSuccessful(err, res, function() {
                     res.send({id: id});
+                });
+            });
+        }
+        
+        function excluir(req, res) {
+            usuarioService.excluir(req.params.id, function(err) {
+                responseHelper.isSuccessful(err, res, function() {
+                    res.send();
                 });
             });
         }

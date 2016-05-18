@@ -10,6 +10,7 @@ module.exports = function(builder) {
         service.criar = criar;
         service.buscar = buscar;
         service.alterar = alterar;
+        service.excluir = excluir;
         return service;
 
         // implementation
@@ -28,6 +29,15 @@ module.exports = function(builder) {
                     return callback(err);
                 }
                 callback(null, usuario);
+            });
+        }
+        
+        function excluir(id, callback) {
+            UsuarioData.remove(id, function(err) {
+                if (err) {
+                    return callback(err);
+                }
+                callback(null);
             });
         }
         
