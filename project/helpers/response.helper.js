@@ -21,9 +21,45 @@ module.exports = function (builder) {
         function sendGenericError(err, res) {
             var errorMsg = _getErrorMsg(err);
             var errorStatus = _getErrorStatus(err);
-            res.status(errorStatus || 500).send({
-                error: errorMsg
-            });
+            var errorCode = _getErrorCode(err);
+            var errorField = _getErrorField(err);
+            
+            var resObj = {};
+            
+            if(errorMsg) {
+                resObj.message = errorMsg;
+            }
+            
+            if(errorCode) {
+                resObj.code = errorCode;
+            }
+            
+            if(errorField) {
+                resObj.field = errorField;
+            }
+            
+            res.status(errorStatus)
+                .send(resObj);
+        }
+        
+        function _getErrorField(err) {
+            var errorField = null
+            if(typeof (err) !== "string"){
+                if(err.field) {
+                    errorField = err.field;
+                }
+            }
+            return errorField;
+        }
+        
+        function _getErrorCode(err) {
+            var errorCode = null
+            if(typeof (err) !== "string"){
+                if(err.code) {
+                    errorCode = err.code;
+                }
+            }
+            return errorCode;
         }
         
         function _getErrorMsg(err) {
@@ -33,8 +69,6 @@ module.exports = function (builder) {
             } else {
                 if(err.message) {
                     errorMsg = err.message;
-                } else {
-                    errorMsg = JSON.stringify(err);
                 }
             }
             return errorMsg;

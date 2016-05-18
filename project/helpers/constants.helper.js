@@ -14,6 +14,13 @@ module.exports = function(builder) {
             database: process.env.DB_DATABASE ? process.env.DB_DATABASE : 'app_posts',
             port: process.env.DB_PORT ? process.env.DB_PORT : 5432
         };
+        
+        helper.errorCodes = {
+            invalidUserAndPass: 1,
+            invalidToken: 2,
+            userAlreadyExists: 3,
+            missingMandatoryField: 4
+        };
 
         return helper;
     }

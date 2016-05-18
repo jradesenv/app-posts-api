@@ -29,11 +29,8 @@ module.exports = function(builder) {
         }
         
         function criar(session, post, callback) {
-            if(!post) {
-                return callback("post está vazio.")
-            }
-            if(!post.conteudo) {
-                return callback("'conteudo' é obrigatório.");
+            if(!(post && post.conteudo)) {
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "conteudo"});
             }
             
             post.usuarioId = session.id;

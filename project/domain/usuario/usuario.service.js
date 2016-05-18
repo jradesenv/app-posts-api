@@ -32,20 +32,20 @@ module.exports = function(builder) {
         
         function criar(usuario, callback, alreadyMd5) {
             if(!usuario.login) {
-                return callback("'login' é obrigatório.");
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "login"});
             }
             if(!usuario.senha) {
-                return callback("'senha' é obrigatório.");
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "senha"});
             }
             if(!usuario.nome) {
-                return callback("'nome' é obrigatório.");
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "nome"});
             }
             UsuarioData.getByLogin(usuario.login, function(err, old) {
                 if (err) {
                     return callback(err);
                 }
                 if (old) {
-                    return callback("'login' já existente.")
+                    return callback({status: 409, code: constantsHelper.errorCodes.userAlreadyExists});
                 } else {
                     usuario.senha = alreadyMd5 ? usuario.senha : md5(usuario.senha);
                     UsuarioData.create(usuario, function(err, id) {
@@ -66,26 +66,23 @@ module.exports = function(builder) {
                 if (usuario) {
                     senha = alreadyMd5 ? senha : md5(senha);
                     if (senha !== usuario.senha) {
-                        callback({status: 401, message: "Usuário e/ou senha inválidos."});
+                        callback({status: 401, code: constantsHelper.errorCodes.invalidUserAndPass});
                     } else {
                         callback(null, usuario);
                     }
                 } else {
-                    callback({status: 401, message: "Usuário e/ou senha inválidos."});
+                    callback({status: 401, code: constantsHelper.errorCodes.invalidUserAndPass});
                 }
             }, true);
         }
 
         function efetuarLogin(usuario, callback) {
             try {
-                if(!usuario) {
-                    return callback("usuario está vazio.");
-                }
-                if(!usuario.login) {
-                    return callback("'login' é obrigatório.");
+                if(!(usuario && usuario.login)) {
+                    return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "login"});
                 }
                 if(!usuario.senha) {
-                    return callback("'senha' é obrigatório.");
+                    return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "senha"});
                 }
                 validarCredenciais(usuario.login, usuario.senha, function(err, usuario) {
                     if (err) {
@@ -101,7 +98,7 @@ module.exports = function(builder) {
                 });
             } catch (ex) {
                 console.error(ex);
-                callback("Erro ao efetuar login.");
+                callback(ex);
             }
         }
 
