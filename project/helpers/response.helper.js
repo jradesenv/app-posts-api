@@ -22,7 +22,7 @@ module.exports = function (builder) {
             var errorMsg = _getErrorMsg(err);
             var errorStatus = _getErrorStatus(err);
             var errorCode = _getErrorCode(err);
-            var errorField = _getErrorField(err);
+            var errorField = _getErrorFields(err);
             
             var resObj = {};
             
@@ -35,18 +35,18 @@ module.exports = function (builder) {
             }
             
             if(errorField) {
-                resObj.field = errorField;
+                resObj.fields = errorField;
             }
             
             res.status(errorStatus)
                 .send(resObj);
         }
         
-        function _getErrorField(err) {
+        function _getErrorFields(err) {
             var errorField = null
             if(typeof (err) !== "string"){
-                if(err.field) {
-                    errorField = err.field;
+                if(err.fields) {
+                    errorField = err.fields;
                 }
             }
             return errorField;

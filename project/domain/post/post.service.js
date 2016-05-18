@@ -30,9 +30,15 @@ module.exports = function(builder) {
         
         function criar(session, post, callback) {
             if(!(post && post.conteudo)) {
-                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "conteudo"});
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, fields: ["conteudo"]});
             }
-            
+            var fieldsErro = [];
+            if(!(post && post.conteudo)) {
+                fieldsErro.push("conteudo");
+            }
+            if(fieldsErro.length > 0) {
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, fields: fieldsErro});
+            }
             post.usuarioId = session.id;
             
             PostData.create(post, function(err, id) {

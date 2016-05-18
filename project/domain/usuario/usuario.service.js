@@ -31,15 +31,20 @@ module.exports = function(builder) {
         }
         
         function criar(usuario, callback, alreadyMd5) {
-            if(!usuario.login) {
-                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "login"});
+            var fieldsErro = [];
+            if(!(usuario && usuario.login)) {
+                fieldsErro.push("login");
             }
-            if(!usuario.senha) {
-                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "senha"});
+            if(!(usuario && usuario.senha)) {
+                fieldsErro.push("senha");
             }
-            if(!usuario.nome) {
-                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "nome"});
+            if(!(usuario && usuario.nome)) {
+                fieldsErro.push("nome");
             }
+            if(fieldsErro.length > 0) {
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, fields: fieldsErro});
+            }
+            
             UsuarioData.getByLogin(usuario.login, function(err, old) {
                 if (err) {
                     return callback(err);
@@ -78,11 +83,15 @@ module.exports = function(builder) {
 
         function efetuarLogin(usuario, callback) {
             try {
+                var fieldsErro = [];
                 if(!(usuario && usuario.login)) {
-                    return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "login"});
+                    fieldsErro.push("login");
                 }
-                if(!usuario.senha) {
-                    return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, field: "senha"});
+                if(!(usuario && usuario.senha)) {
+                    fieldsErro.push("senha");
+                }
+                if(fieldsErro.length > 0) {
+                    return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, fields: fieldsErro});
                 }
                 validarCredenciais(usuario.login, usuario.senha, function(err, usuario) {
                     if (err) {
