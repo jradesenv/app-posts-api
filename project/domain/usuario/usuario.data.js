@@ -8,6 +8,7 @@ module.exports = function(builder) {
         model.getById = getById;
         model.getByLogin = getByLogin;
         model.create = create;
+        model.update = update;
         return model;
 
         // implementation
@@ -34,6 +35,22 @@ module.exports = function(builder) {
                 
             query.then(function (ids) {
                 callback(null, ids[0]);
+            })
+            .catch(function (err) {
+                callback(err);
+            }); 
+        }
+        
+        function update(usuario, callback) {
+            var usuarioModel = new UsuarioModel(usuario);
+            delete usuarioModel.id;
+            
+            var query = knex("usuario")
+                .update(usuarioModel)
+                .where({id: usuario.id});
+                
+            query.then(function () {
+                callback(null);
             })
             .catch(function (err) {
                 callback(err);

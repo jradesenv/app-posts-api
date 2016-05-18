@@ -9,6 +9,7 @@ module.exports = function(builder) {
         service.efetuarLogin = efetuarLogin;
         service.criar = criar;
         service.buscar = buscar;
+        service.alterar = alterar;
         return service;
 
         // implementation
@@ -28,6 +29,41 @@ module.exports = function(builder) {
                 }
                 callback(null, usuario);
             });
+        }
+        
+        function alterar(id, usuario, callback, alreadyMd5) {
+            var fieldsErro = [];
+            if(!id) {
+                fieldsErro.push("id");
+            }
+            if(!(usuario && usuario.login)) {
+                fieldsErro.push("login");
+            }
+            if(!(usuario && usuario.nome)) {
+                fieldsErro.push("nome");
+            }
+            if(fieldsErro.length > 0) {
+                return callback({status: 400, code: constantsHelper.errorCodes.missingMandatoryField, fields: fieldsErro});
+            }
+            
+            delete usuario.senha;
+            
+            UsuarioData.getByLogin(usuario.login, function(err, old) {
+                if (err) {
+                    return callback(err);
+                }
+                if (old && old.id != id) {
+                    return callback({status: 409, code: constantsHelper.errorCodes.userAlreadyExists});
+                } else {
+                    usuario.id = id;
+                    UsuarioData.update(usuario, function(err) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        callback(null, id);
+                    });
+                }
+            });            
         }
         
         function criar(usuario, callback, alreadyMd5) {

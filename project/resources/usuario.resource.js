@@ -5,6 +5,7 @@ module.exports = function(builder) {
         //definition
         router.post('/login', efetuarLogin);
         router.post('/usuario', criar); //sem autenticação pra facilitar
+        router.put('/usuario/:id', authMiddleware, alterar); //sem autenticação pra facilitar
         router.get('/usuario', authMiddleware, listar);
         router.get('/usuario/:id', authMiddleware, buscar);
 
@@ -27,6 +28,14 @@ module.exports = function(builder) {
         
         function criar(req, res) {
             usuarioService.criar(req.body, function(err, id) {
+                responseHelper.isSuccessful(err, res, function() {
+                    res.send({id: id});
+                });
+            });
+        }
+        
+        function alterar(req, res) {
+            usuarioService.alterar(req.params.id, req.body, function(err, id) {
                 responseHelper.isSuccessful(err, res, function() {
                     res.send({id: id});
                 });
