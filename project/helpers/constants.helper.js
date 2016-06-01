@@ -15,6 +15,8 @@ module.exports = function(builder) {
             port: process.env.DB_PORT ? process.env.DB_PORT : 5432
         };
         
+        console.log(helper);
+        
         helper.errorCodes = {
             invalidUserAndPass: 1,
             invalidToken: 2,
