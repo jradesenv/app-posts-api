@@ -23,8 +23,7 @@
         builder = require('dibuilder'),
         router = express.Router(),
         multer = require('multer'),
-        http = require('http'),
-        easyimage = require("easyimage");
+        http = require('http')
 
     //adiciona modulos já instanciados/configurados
     builder.addInstance('express', express);
